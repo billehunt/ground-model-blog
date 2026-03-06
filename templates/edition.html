@@ -1,44 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} — Ground Model</title>
-    <meta name="description" content="{{ preview }}">
-    <meta property="og:title" content="{{ title }}">
-    <meta property="og:description" content="{{ preview }}">
-    <meta property="og:type" content="article">
-    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} — Ground Model</title>
+  <meta name="description" content="{{ preview }}">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:description" content="{{ preview }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ canonical_url }}">
+  {% if hero_image_url %}
+  <meta property="og:image" content="https://groundmodel.com{{ hero_image_url }}">
+  {% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title }}">
+  <meta name="twitter:description" content="{{ preview }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <header>
-        <a href="/" class="logo">Ground Model</a>
-        <span class="tagline">AI news. No hype. Just signal.</span>
-    </header>
-    <a href="/" class="back-link">&larr; Back to all editions</a>
-    <article>
-        <h1>{{ title }}</h1>
-        <div class="meta">
-            <time datetime="{{ date }}">{{ date }}</time>
-            <span class="reading-time">{{ reading_time }} min read</span>
-        </div>
-        <div class="content">
-            {{ content }}
-        </div>
-    </article>
-    <div class="share-buttons">
-        <span>Share this edition:</span>
-        <a href="https://twitter.com/intent/tweet?text={{ title|urlencode }}&url={{ canonical_url|urlencode }}" target="_blank" rel="noopener" class="share-btn">Twitter/X</a>
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ canonical_url|urlencode }}" target="_blank" rel="noopener" class="share-btn">LinkedIn</a>
-        <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){this.textContent='Copied!'}.bind(this))" class="share-btn">Copy link</button>
+
+  {% if hero_image_url %}
+  <!-- Full-width hero image with overlay -->
+  <div class="post-hero">
+    <img src="{{ hero_image_url }}" alt="{{ title }}" loading="eager">
+    <div class="post-hero-overlay">
+      <div class="post-hero-title">{{ title }}</div>
+      <div class="post-hero-meta">
+        Issue #{{ issue_number }}&nbsp;·&nbsp;<time datetime="{{ date }}">{{ date }}</time>&nbsp;·&nbsp;{{ reading_time }} min read
+      </div>
     </div>
-    <section class="subscribe-inline">
-        <p>Get Ground Model in your inbox every weekday.</p>
-        <a href="https://ground-model.beehiiv.com/subscribe" class="subscribe-btn-large">Subscribe</a>
-    </section>
-    <footer>
-        <p class="copyright">&copy; {{ year }} Ground Model</p>
+  </div>
+  {% endif %}
+
+  <div class="page-shell">
+    <header class="site-header">
+      <a href="/" class="logo">Ground Model</a>
+      <span class="tagline">AI news. No hype. Just signal.</span>
+    </header>
+
+    <a href="/" class="back-link">&larr; All editions</a>
+
+    <article>
+      {% if not hero_image_url %}
+      <!-- No hero image — show text header -->
+      <div class="post-header">
+        <h1 class="post-title">{{ title }}</h1>
+        <div class="post-meta">
+          <span>Issue #{{ issue_number }}</span>
+          <span class="sep">·</span>
+          <time datetime="{{ date }}">{{ date }}</time>
+          <span class="sep">·</span>
+          <span>{{ reading_time }} min read</span>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="post-body">
+        {{ content }}
+      </div>
+    </article>
+
+    <!-- Share buttons -->
+    <div class="share-section">
+      <span class="share-label">Share this edition:</span>
+      <a href="https://twitter.com/intent/tweet?text={{ title|urlencode }}&url={{ canonical_url|urlencode }}"
+         target="_blank" rel="noopener" class="share-btn">𝕏 Twitter</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ canonical_url|urlencode }}"
+         target="_blank" rel="noopener" class="share-btn">LinkedIn</a>
+      <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy link'},2000)})" class="share-btn">Copy link</button>
+    </div>
+
+    <!-- Subscribe CTA -->
+    <div class="subscribe-cta">
+      <h3>Get Ground Model in your inbox</h3>
+      <p>Daily AI briefings for builders. No hype. Just signal. Free, Mon-Fri.</p>
+      <a href="https://ground-model.beehiiv.com/subscribe" class="btn-subscribe">Subscribe free</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-bottom">
+        <span class="copyright">&copy; {{ year }} Ground Model</span>
+        <a href="https://ground-model.beehiiv.com/unsubscribe" class="unsubscribe">Unsubscribe</a>
+      </div>
     </footer>
+  </div>
+
+  <!-- Company logos for Quick Hits items: inject via JS using Clearbit -->
+  <script>
+  (function() {
+    // Parse domains from brief_domains passed from Python template
+    var briefDomains = {{ brief_domains | tojson }};
+
+    // Find all links in the post body that are "Read more" links
+    var links = document.querySelectorAll('.post-body a');
+    var domainIndexMap = {};
+    briefDomains.forEach(function(d, i) { domainIndexMap[d] = i; });
+
+    links.forEach(function(a) {
+      try {
+        var url = new URL(a.href);
+        var domain = url.hostname.replace(/^www\./, '');
+        if (briefDomains.indexOf(domain) === -1) return;
+
+        // Walk up to find the containing paragraph or list item
+        var container = a.closest('p') || a.closest('li');
+        if (!container) return;
+
+        // Only inject once per container
+        if (container.dataset.logoInjected) return;
+        container.dataset.logoInjected = '1';
+
+        // Find the bold headline (strong tag) or first text
+        var strong = container.querySelector('strong');
+
+        // Create logo img
+        var img = document.createElement('img');
+        img.src = 'https://logo.clearbit.com/' + domain + '?size=64';
+        img.alt = domain;
+        img.className = 'brief-logo';
+        img.width = 28;
+        img.height = 28;
+        img.onerror = function() {
+          // Replace with fallback SVG icon
+          var fallback = document.createElement('span');
+          fallback.className = 'brief-logo-fallback';
+          fallback.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+          img.replaceWith(fallback);
+        };
+
+        // Wrap in brief-card if in a plain paragraph
+        if (container.tagName === 'P') {
+          var card = document.createElement('div');
+          card.className = 'brief-card';
+
+          var head = document.createElement('div');
+          head.className = 'brief-card-head';
+          head.appendChild(img);
+
+          if (strong) {
+            var headline = document.createElement('div');
+            headline.className = 'brief-headline';
+            headline.innerHTML = strong.innerHTML;
+            head.appendChild(headline);
+            strong.remove();
+          }
+          card.appendChild(head);
+
+          var body = document.createElement('div');
+          body.className = 'brief-body';
+          body.innerHTML = container.innerHTML;
+          card.appendChild(body);
+
+          container.replaceWith(card);
+        } else {
+          // li: just prepend the logo
+          container.insertBefore(img, container.firstChild);
+        }
+      } catch(e) {}
+    });
+  })();
+  </script>
+
 </body>
 </html>

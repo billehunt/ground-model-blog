@@ -1,55 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ground Model — Daily AI news for builders.</title>
-    <meta name="description" content="AI news for tech entrepreneurs. No hype. Just signal. Daily, Mon-Fri.">
-    <meta property="og:title" content="Ground Model">
-    <meta property="og:description" content="Daily AI news for builders. No hype. Just signal.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://groundmodel.com">
-    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ground Model — Daily AI news for builders.</title>
+  <meta name="description" content="AI news for tech entrepreneurs. No hype. Just signal. Daily, Mon-Fri.">
+  <meta property="og:title" content="Ground Model">
+  <meta property="og:description" content="Daily AI news for builders. No hype. Just signal.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://groundmodel.com">
+  {% if editions and editions[0].hero_url %}
+  <meta property="og:image" content="https://groundmodel.com{{ editions[0].hero_url }}">
+  {% endif %}
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://groundmodel.com">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <header>
-        <a href="/" class="logo">Ground Model</a>
-        <span class="tagline">AI news. No hype. Just signal.</span>
-    </header>
-    <main>
-        <section class="hero">
-            <h1>Daily AI news for builders.</h1>
-            <p class="hero-desc">The essential AI briefing for tech entrepreneurs. What happened, what it means, and what to do about it. No cheerleading. No doomscrolling. Just signal.</p>
-            <a href="https://ground-model.beehiiv.com/subscribe" class="subscribe-btn-large">Subscribe to Ground Model</a>
-            <p class="subscribe-note">Daily, Mon-Fri. Free.</p>
-        </section>
+  <div class="page-shell">
 
-        {% if editions and editions|length > 0 %}
-        <section class="editions-section">
-            <h2>Recent Editions</h2>
-            <ul class="edition-list">
-                {% for edition in editions %}
-                <li>
-                    <a href="{{ edition.url }}">
-                        <span class="edition-title">{{ edition.title }}</span>
-                        <span class="edition-date">{{ edition.date }}</span>
-                        {% if edition.preview %}
-                        <span class="edition-preview">{{ edition.preview }}</span>
-                        {% endif %}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </section>
-        {% else %}
-        <section class="coming-soon">
-            <p>First edition coming soon.</p>
-        </section>
+    <header class="site-header">
+      <a href="/" class="logo">Ground Model</a>
+      <span class="tagline">AI news. No hype. Just signal.</span>
+    </header>
+
+    <main>
+
+      <!-- Homepage hero text -->
+      <section class="home-hero">
+        <div class="home-wordmark">Ground Model</div>
+        <p class="home-tagline">AI news. No hype. Just signal.</p>
+        <p style="font-size:0.9375rem;color:#374151;max-width:540px;margin-bottom:1.5rem;">
+          The essential AI briefing for tech entrepreneurs. What happened, what it means for builders,
+          and what to do about it. No cheerleading. No doomscrolling.
+        </p>
+      </section>
+
+      <!-- Subscribe CTA -->
+      <div class="home-subscribe">
+        <h2>Get Ground Model free in your inbox</h2>
+        <p>Daily Mon-Fri. Written for builders, not hypesters.</p>
+        <a href="https://ground-model.beehiiv.com/subscribe" class="btn-subscribe">Subscribe free →</a>
+      </div>
+
+      {% if editions and editions|length > 0 %}
+
+      <!-- Featured latest edition -->
+      {% set latest = editions[0] %}
+      <div class="featured-edition">
+        {% if latest.hero_url %}
+        <a href="{{ latest.url }}">
+          <img src="{{ latest.hero_url }}" alt="{{ latest.title }}" class="featured-thumb" loading="lazy">
+        </a>
         {% endif %}
+        <div class="featured-body">
+          <div class="featured-label">Latest edition</div>
+          <a href="{{ latest.url }}" class="featured-title">{{ latest.title }}</a>
+          {% if latest.preview %}
+          <p class="featured-preview">{{ latest.preview }}</p>
+          {% endif %}
+          <p style="margin-top:0.625rem;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:0.8125rem;color:#6B7280;">
+            {{ latest.date }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Archive list -->
+      {% if editions|length > 1 %}
+      <section class="archive-section">
+        <div class="archive-label">Archive</div>
+        <ul class="archive-list">
+          {% for edition in editions[1:] %}
+          <li>
+            <a href="{{ edition.url }}" class="archive-link">
+              <span class="archive-date">{{ edition.date }}</span>
+              <span class="archive-title">{{ edition.title }}</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% else %}
+      <p style="color:#6B7280;font-style:italic;padding:2rem 0;">First edition coming soon.</p>
+      {% endif %}
+
     </main>
-    <footer>
-        <p class="copyright">&copy; {{ year }} Ground Model</p>
+
+    <footer class="site-footer">
+      <div class="footer-bottom">
+        <span class="copyright">&copy; {{ year }} Ground Model</span>
+        <a href="https://ground-model.beehiiv.com/unsubscribe" class="unsubscribe">Unsubscribe</a>
+      </div>
     </footer>
+
+  </div>
 </body>
 </html>
