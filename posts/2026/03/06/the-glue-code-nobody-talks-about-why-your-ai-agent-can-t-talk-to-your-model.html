@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The glue code nobody talks about: why your AI agent can&#39;t talk to your model — Ground Model</title>
+    <meta name="description" content="The Glue Code Nobody Talks About: Why Your AI Agent Can&#39;t Talk to Your Model
+Ground Model — Daily AI Newsletter for Tech Entrepreneurs
+This week&#39;s lens: The Sta">
+    <meta property="og:title" content="The glue code nobody talks about: why your AI agent can&#39;t talk to your model">
+    <meta property="og:description" content="The Glue Code Nobody Talks About: Why Your AI Agent Can&#39;t Talk to Your Model
+Ground Model — Daily AI Newsletter for Tech Entrepreneurs
+This week&#39;s lens: The Sta">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">Ground Model</a>
+        <span class="tagline">AI news. No hype. Just signal.</span>
+    </header>
+    <a href="/" class="back-link">&larr; Back to all editions</a>
+    <article>
+        <h1>The glue code nobody talks about: why your AI agent can&#39;t talk to your model</h1>
+        <div class="meta">
+            <time datetime="2026-03-06">2026-03-06</time>
+            <span class="reading-time">5 min read</span>
+        </div>
+        <div class="content">
+            <h1>The Glue Code Nobody Talks About: Why Your AI Agent Can't Talk to Your Model</h1>
+<p><em>Ground Model — Daily AI Newsletter for Tech Entrepreneurs</em></p>
+<p><strong>This week's lens: The State of AI Agents</strong> — Agents are moving from demos to production. We're examining what it actually takes to deploy reliable AI agents: the architecture decisions, the failure modes, and the builders doing it for real.</p>
+<hr />
+<h2>Lead Story: The Unsexy Truth About Production Agents — It's a Parsing Problem</h2>
+<p>AWS published a detailed walkthrough this week on building custom model providers for Strands Agents running on SageMaker endpoints. On the surface, it's a technical tutorial. Underneath, it's a confession about the actual state of AI agent deployment.</p>
+<p><strong>The problem:</strong> You deploy Llama 3.1 on SageMaker using SGLang (a popular serving framework). It returns OpenAI-compatible responses. You try to wire it into Strands Agents. You get <code>TypeError: 'NoneType' object is not subscriptable</code>. Your agent is dead on arrival — not because the model is bad, but because two perfectly functional systems speak different API dialects.</p>
+<p>Strands expects Bedrock Messages API format. SGLang speaks OpenAI-compatible. Neither is wrong. Both are standard. And yet the gap between them requires you to write a custom <code>LlamaModelProvider</code> class that extends <code>SageMakerAIModel</code> to translate responses in real time.</p>
+<h3>Why this matters for builders:</h3>
+<ul>
+<li>
+<p><strong>The agent framework wars have a hidden cost.</strong> Every framework (Strands, LangChain, CrewAI, AutoGen) has its own expected response format. Every serving framework (SGLang, vLLM, TorchServe) has its own output format. The combinatorial explosion of parsers needed is the real integration tax nobody's pricing into their estimates.</p>
+</li>
+<li>
+<p><strong>"OpenAI-compatible" is a lie.</strong> It's more like "OpenAI-ish." Field names match, but structure, streaming behavior, tool-call formatting, and stop reasons all vary. If you're building production agents, budget 20-30% of your integration time for format translation alone.</p>
+</li>
+<li>
+<p><strong>This is why MCP matters.</strong> AWS is simultaneously pushing Model Context Protocol as a standardization layer. The pitch: one protocol to rule them all. The reality: it's another format to translate to and from, at least for now.</p>
+</li>
+</ul>
+<h3>The builder's takeaway:</h3>
+<p>If you're deploying agents this quarter, don't start with the agent logic. Start with the plumbing. Map your model's actual output format against your framework's expected input. Write the parser first. Test it with streaming and non-streaming responses, with and without tool calls. The agent is only as reliable as the translation layer beneath it.</p>
+<p>The unglamorous truth about the "age of agents": we're not blocked on intelligence. We're blocked on interoperability.</p>
+<p><a href="https://aws.amazon.com/blogs/machine-learning/building-custom-model-provider-for-strands-agents-with-llms-hosted-on-sagemaker-ai-endpoints/">Read the full AWS walkthrough →</a></p>
+<hr />
+<h2>Quick Hits</h2>
+<p><strong>1. Robotics AI goes embedded — and it's harder than you think.</strong><br />
+Hugging Face and NXP published a deep walkthrough on deploying Vision-Language-Action (VLA) models on embedded platforms. The pipeline: record datasets, fine-tune with LeRobot, then optimize for on-device inference using quantization and ONNX export. The gap between "robot does thing in lab" and "robot does thing on a $50 chip" is enormous. <a href="https://huggingface.co/blog/nxp/bringing-robotics-ai-to-embedded-platforms">Read more →</a></p>
+<p><strong>2. Ricoh cut document processing onboarding from weeks to days.</strong><br />
+Using AWS serverless + generative AI, they built an intelligent document processing pipeline that reduced engineering effort by 80% for new document types. The interesting bit: a framework approach so each new customer's documents don't require custom ML models — just configuration. <a href="https://aws.amazon.com/blogs/machine-learning/how-ricoh-built-a-scalable-intelligent-document-processing-solution-on-aws/">Read more →</a></p>
+<p><strong>3. Salesforce pushes Agentforce into nonprofits.</strong><br />
+Their "Agents for Impact" accelerator targets administrative automation for resource-strapped organizations. The use cases — donor management, volunteer coordination, grant reporting — are actually solid agent applications: high-volume, rule-bound, and manageable error tolerance. <a href="https://www.salesforce.com/blog/ai-nonprofit-use-cases/">Read more →</a></p>
+<p><strong>4. AWS adds predictive ML to AI agents via MCP.</strong><br />
+SageMaker endpoints hosting traditional ML models (churn prediction, forecasting) can now be exposed to LLM-based agents through Model Context Protocol. Agents that don't just chat but make data-driven decisions using your existing ML investments. This is where agents get genuinely useful. <a href="https://aws.amazon.com/blogs/machine-learning/enhance-ai-agents-using-predictive-ml-models-with-amazon-sagemaker-ai-and-model-context-protocol-mcp/">Read more →</a></p>
+<hr />
+<h2>Company Watch: Strands Agents (AWS)</h2>
+<p>AWS's open-source Strands Agents SDK is quietly becoming a serious contender in the agent framework space:</p>
+<ul>
+<li><strong>Open source SDK</strong> with a model-driven approach — agents in a few lines of code</li>
+<li><strong>MCP integration</strong> for standardized tool and context access</li>
+<li><strong>SageMaker Unified Studio integration</strong> for end-to-end development</li>
+<li><strong>Reinforcement fine-tuning support</strong> for custom model behavior</li>
+</ul>
+<p>AWS is playing the infrastructure game — not trying to own the agent logic, but making sure every path to production agents runs through their stack. For builders already in AWS, Strands is worth evaluating seriously. For those outside AWS, it's a signal that agent frameworks are becoming cloud-native platform features, not standalone tools.</p>
+<hr />
+<h2>Tool of the Day: ml-container-creator (awslabs)</h2>
+<p>Open-source tool from AWS Labs that generates custom Docker containers for ML model serving on SageMaker. Automates the container creation so you can go from "I want Llama 3.1 on SGLang" to a deployed endpoint without hand-rolling Dockerfiles and debugging CUDA dependencies.</p>
+<p><strong>Best for:</strong> Teams deploying self-hosted models who need SageMaker's scaling but don't want JumpStart's pre-built options.</p>
+<p><a href="https://github.com/awslabs/ml-container-creator">Check it out on GitHub →</a></p>
+<hr />
+<h2>Stat of the Day</h2>
+<blockquote>
+<p><strong>25% of Y Combinator's latest startup batch used AI to write 95%+ of its code.</strong><br />
+— Garry Tan, YC CEO</p>
+</blockquote>
+<hr />
+<p><em>Ground Model is a daily newsletter for tech entrepreneurs building with AI. No cheerleading, no doomscrolling — just what happened, what it means, and what to do about it.</em></p>
+        </div>
+    </article>
+    <div class="share-buttons">
+        <span>Share this edition:</span>
+        <a href="https://twitter.com/intent/tweet?text=The%20glue%20code%20nobody%20talks%20about%3A%20why%20your%20AI%20agent%20can%27t%20talk%20to%20your%20model&url=https%3A//groundmodel.com/posts/2026/03/06/the-glue-code-nobody-talks-about-why-your-ai-agent-can-t-talk-to-your-model.html" target="_blank" rel="noopener" class="share-btn">Twitter/X</a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//groundmodel.com/posts/2026/03/06/the-glue-code-nobody-talks-about-why-your-ai-agent-can-t-talk-to-your-model.html" target="_blank" rel="noopener" class="share-btn">LinkedIn</a>
+        <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){this.textContent='Copied!'}.bind(this))" class="share-btn">Copy link</button>
+    </div>
+    <section class="subscribe-inline">
+        <p>Get Ground Model in your inbox every weekday.</p>
+        <a href="https://ground-model.beehiiv.com/subscribe" class="subscribe-btn-large">Subscribe</a>
+    </section>
+    <footer>
+        <p class="copyright">&copy; 2026 Ground Model</p>
+    </footer>
+</body>
+</html>
