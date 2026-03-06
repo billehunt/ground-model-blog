@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Agent Reality Check: What&#39;s Actually Working vs. Vaporware — Ground Model</title>
+  <meta name="description" content="The Agent Reality Check: What&#39;s Actually Working vs. Vaporware
+Ground Model — Daily AI Newsletter for Builders
+
+Lead Story: AWS Strands Agents — Solving the Plu">
+  <meta property="og:title" content="The Agent Reality Check: What&#39;s Actually Working vs. Vaporware">
+  <meta property="og:description" content="The Agent Reality Check: What&#39;s Actually Working vs. Vaporware
+Ground Model — Daily AI Newsletter for Builders
+
+Lead Story: AWS Strands Agents — Solving the Plu">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://groundmodel.com/posts/2026/03/06/the-agent-reality-check-what-s-actually-working-vs-vaporware.html">
+  
+  <meta property="og:image" content="https://groundmodel.com/static/images/2026-03-06_hero.png">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Agent Reality Check: What&#39;s Actually Working vs. Vaporware">
+  <meta name="twitter:description" content="The Agent Reality Check: What&#39;s Actually Working vs. Vaporware
+Ground Model — Daily AI Newsletter for Builders
+
+Lead Story: AWS Strands Agents — Solving the Plu">
+  <link rel="canonical" href="https://groundmodel.com/posts/2026/03/06/the-agent-reality-check-what-s-actually-working-vs-vaporware.html">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  
+  <!-- Full-width hero image with overlay -->
+  <div class="post-hero">
+    <img src="/static/images/2026-03-06_hero.png" alt="The Agent Reality Check: What&#39;s Actually Working vs. Vaporware" loading="eager">
+    <div class="post-hero-overlay">
+      <div class="post-hero-title">The Agent Reality Check: What&#39;s Actually Working vs. Vaporware</div>
+      <div class="post-hero-meta">
+        Issue #2&nbsp;·&nbsp;<time datetime="2026-03-06">2026-03-06</time>&nbsp;·&nbsp;4 min read
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="page-shell">
+    <header class="site-header">
+      <a href="/" class="logo">Ground Model</a>
+      <span class="tagline">AI news. No hype. Just signal.</span>
+    </header>
+
+    <a href="/" class="back-link">&larr; All editions</a>
+
+    <article>
+      
+
+      <div class="post-body">
+        <h1>The Agent Reality Check: What's Actually Working vs. Vaporware</h1>
+<p><em>Ground Model — Daily AI Newsletter for Builders</em></p>
+<hr />
+<h2>Lead Story: AWS Strands Agents — Solving the Plumbing Problem Nobody Talks About</h2>
+<p>AWS published a detailed guide on building custom model providers for Strands Agents with LLMs hosted on SageMaker endpoints. The core problem: if you host your own models using SGLang, vLLM, or TorchServe on SageMaker, they spit out OpenAI-compatible responses. Strands agents expect Bedrock Messages API format. Your agent crashes with <code>TypeError: 'NoneType' object is not subscriptable</code>. Elegant.</p>
+<p>The fix is a custom parser layer — extend <code>SageMakerAIModel</code>, translate the response format, move on with your life. Three layers: Model Deployment (Llama 3.1 on SGLang), Parser (custom <code>LlamaModelProvider</code>), and Agent (Strands SDK consuming the translated output).</p>
+<h3>Why This Actually Matters for Builders</h3>
+<p>This is a deeply unsexy blog post. And that's exactly why it matters.</p>
+<p>We're in the phase of agent development where the hard problems aren't "can an LLM use tools?" — they're format incompatibilities, response parsing failures, and integration plumbing between systems that were never designed to talk to each other. The fact that AWS had to publish a tutorial on making their own agent framework work with their own hosting platform tells you everything about the current state of production agent infrastructure.</p>
+<p><strong>The real signal here:</strong> The agent framework wars are becoming cloud provider lock-in plays. AWS wants you running Strands on SageMaker behind Bedrock's API format. This is the same playbook we've tracked with OpenAI embedding into enterprise workflows — except AWS is doing it at the infrastructure layer. If your agents run on Strands with custom SageMaker parsers, switching to another framework or cloud means rewriting your entire integration layer.</p>
+<h3>The Builder's Takeaway</h3>
+<p>If you're deploying agents in production today, the framework choice is less about features and more about which cloud provider's ecosystem you're already married to. <strong>Strands</strong> makes sense if you're deep in AWS. <strong>LangGraph</strong> if you're cloud-agnostic and need state machines. <strong>OpenAI's new AgentKit</strong> if you want the tightest model integration but accept vendor lock-in.</p>
+<p>The uncomfortable truth: no agent framework is mature enough to bet your company on. Build your agent logic as framework-agnostic as possible. Use thin adapter layers (like AWS is showing here, ironically). The frameworks will consolidate in 12 months. Your business logic shouldn't have to.</p>
+<p><a href="https://aws.amazon.com/blogs/machine-learning/building-custom-model-provider-for-strands-agents-with-llms-hosted-on-sagemaker-ai-endpoints/">→ AWS ML Blog</a></p>
+<hr />
+<h2>Quick Hits</h2>
+<p><strong>OpenAI Drops AgentKit, New Evals, and RFT for Agents.</strong> OpenAI released AgentKit — a new framework for building agents — alongside agent-specific evaluation tools and reinforcement fine-tuning. Details were light, but the signal is clear: OpenAI wants to own the full agent stack from model to framework to eval. The most important announcement this week for anyone choosing a framework. <a href="https://openai.com/index/introducing-agentkit">→ OpenAI</a></p>
+<p><strong>Notion Rebuilt for Agentic AI with GPT-5.</strong> Notion redesigned its platform to support autonomous AI workflows powered by GPT-5. One of the first major SaaS platforms to rebuild — not just bolt on — agentic capabilities. Watch what they learned about where agents fail inside existing product UX. <a href="https://openai.com/index/notion">→ OpenAI</a></p>
+<p><strong>Amazon QuickSight Embeddable Chat Agents.</strong> AWS launched embeddable conversational AI agents for enterprise apps via Quick Suite. This is AWS making BI dashboards conversational. Useful for internal tools on AWS, not a paradigm shift. <a href="https://aws.amazon.com/blogs/machine-learning/embed-amazon-quick-suite-chat-agents-in-enterprise-applications/">→ AWS</a></p>
+<p><strong>Salesforce Pushes Agentforce to Nonprofits.</strong> Salesforce launched 4 proven agent use cases for nonprofits through their Accelerator program. Same academy-style lock-in playbook, now targeting the nonprofit sector. <a href="https://www.salesforce.com/blog/ai-nonprofit-use-cases/">→ Salesforce</a></p>
+<p><strong>OpenAI × Foxconn for U.S. AI Manufacturing.</strong> Partnership to strengthen domestic AI manufacturing supply chains. OpenAI embedding into physical infrastructure, not just software. <a href="https://openai.com/index/openai-and-foxconn-collaborate">→ OpenAI</a></p>
+<hr />
+<h2>Company Watch: AWS Strands vs. OpenAI AgentKit</h2>
+<p>Two major agent frameworks got significant updates this week:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>AWS Strands</th>
+<th>OpenAI AgentKit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Model Lock-in</strong></td>
+<td>Bedrock-native, SageMaker custom models with parser work</td>
+<td>OpenAI models primarily</td>
+</tr>
+<tr>
+<td><strong>Cloud Dependency</strong></td>
+<td>Deep AWS</td>
+<td>Cloud-agnostic in theory, OpenAI-dependent in practice</td>
+</tr>
+<tr>
+<td><strong>Maturity</strong></td>
+<td>Open source, production-focused, MCP support</td>
+<td>New release, eval tooling, RFT integration</td>
+</tr>
+<tr>
+<td><strong>Best For</strong></td>
+<td>AWS-native teams with custom models</td>
+<td>Teams already on OpenAI wanting tight integration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Our take:</strong> Neither is the safe bet. Both are lock-in plays dressed as developer tools. Keep your agent logic portable.</p>
+<hr />
+<h2>Tool of the Day: Strands Agents SDK</h2>
+<p><a href="https://strandsagents.com">strandsagents.com</a> — Open source SDK from AWS for building AI agents. Supports Bedrock and SageMaker providers, MCP integration, multi-agent systems. The custom parser pattern is real production flexibility — host any model, any serving framework, wire it into the agent loop.</p>
+<p><strong>Why builders should look:</strong> If you're on AWS and need agents connecting to predictive ML models (not just LLMs), the SageMaker + MCP + Strands combo is one of the few production-ready hybrid AI agent patterns. The lock-in is real. Eyes open.</p>
+<hr />
+<h2>Stat of the Day</h2>
+<p>AWS had to publish a tutorial on making their own agent framework (Strands) work with their own hosting platform (SageMaker) — highlighting that even first-party agent integrations require custom parser glue code in 2025. <em>Source: AWS ML Blog</em></p>
+<hr />
+<p><em>Ground Model is a daily newsletter for AI builders. Direct. Opinionated. No fluff.</em></p>
+      </div>
+    </article>
+
+    <!-- Share buttons -->
+    <div class="share-section">
+      <span class="share-label">Share this edition:</span>
+      <a href="https://twitter.com/intent/tweet?text=The%20Agent%20Reality%20Check%3A%20What%27s%20Actually%20Working%20vs.%20Vaporware&url=https%3A//groundmodel.com/posts/2026/03/06/the-agent-reality-check-what-s-actually-working-vs-vaporware.html"
+         target="_blank" rel="noopener" class="share-btn">𝕏 Twitter</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//groundmodel.com/posts/2026/03/06/the-agent-reality-check-what-s-actually-working-vs-vaporware.html"
+         target="_blank" rel="noopener" class="share-btn">LinkedIn</a>
+      <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy link'},2000)})" class="share-btn">Copy link</button>
+    </div>
+
+    <!-- Subscribe CTA -->
+    <div class="subscribe-cta">
+      <h3>Get Ground Model in your inbox</h3>
+      <p>Daily AI briefings for builders. No hype. Just signal. Free, Mon-Fri.</p>
+      <a href="https://ground-model.beehiiv.com/subscribe" class="btn-subscribe">Subscribe free</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-bottom">
+        <span class="copyright">&copy; 2026 Ground Model</span>
+        <a href="https://ground-model.beehiiv.com/unsubscribe" class="unsubscribe">Unsubscribe</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Company logos for Quick Hits items: inject via JS using Clearbit -->
+  <script>
+  (function() {
+    // Parse domains from brief_domains passed from Python template
+    var briefDomains = ["openai.com", "aws.amazon.com", "salesforce.com"];
+
+    // Find all links in the post body that are "Read more" links
+    var links = document.querySelectorAll('.post-body a');
+    var domainIndexMap = {};
+    briefDomains.forEach(function(d, i) { domainIndexMap[d] = i; });
+
+    links.forEach(function(a) {
+      try {
+        var url = new URL(a.href);
+        var domain = url.hostname.replace(/^www\./, '');
+        if (briefDomains.indexOf(domain) === -1) return;
+
+        // Walk up to find the containing paragraph or list item
+        var container = a.closest('p') || a.closest('li');
+        if (!container) return;
+
+        // Only inject once per container
+        if (container.dataset.logoInjected) return;
+        container.dataset.logoInjected = '1';
+
+        // Find the bold headline (strong tag) or first text
+        var strong = container.querySelector('strong');
+
+        // Create logo img
+        var img = document.createElement('img');
+        img.src = 'https://logo.clearbit.com/' + domain + '?size=64';
+        img.alt = domain;
+        img.className = 'brief-logo';
+        img.width = 28;
+        img.height = 28;
+        img.onerror = function() {
+          // Replace with fallback SVG icon
+          var fallback = document.createElement('span');
+          fallback.className = 'brief-logo-fallback';
+          fallback.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+          img.replaceWith(fallback);
+        };
+
+        // Wrap in brief-card if in a plain paragraph
+        if (container.tagName === 'P') {
+          var card = document.createElement('div');
+          card.className = 'brief-card';
+
+          var head = document.createElement('div');
+          head.className = 'brief-card-head';
+          head.appendChild(img);
+
+          if (strong) {
+            var headline = document.createElement('div');
+            headline.className = 'brief-headline';
+            headline.innerHTML = strong.innerHTML;
+            head.appendChild(headline);
+            strong.remove();
+          }
+          card.appendChild(head);
+
+          var body = document.createElement('div');
+          body.className = 'brief-body';
+          body.innerHTML = container.innerHTML;
+          card.appendChild(body);
+
+          container.replaceWith(card);
+        } else {
+          // li: just prepend the logo
+          container.insertBefore(img, container.firstChild);
+        }
+      } catch(e) {}
+    });
+  })();
+  </script>
+
+</body>
+</html>
