@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ground Model — Daily AI news for builders.</title>
+    <meta name="description" content="AI news for tech entrepreneurs. No hype. Just signal. Daily, Mon-Fri.">
+    <meta property="og:title" content="Ground Model">
+    <meta property="og:description" content="Daily AI news for builders. No hype. Just signal.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://groundmodel.com">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">Ground Model</a>
+        <span class="tagline">AI news. No hype. Just signal.</span>
+    </header>
+    <main>
+        <section class="hero">
+            <h1>Daily AI news for builders.</h1>
+            <p class="hero-desc">The essential AI briefing for tech entrepreneurs. What happened, what it means, and what to do about it. No cheerleading. No doomscrolling. Just signal.</p>
+            <a href="https://ground-model.beehiiv.com/subscribe" class="subscribe-btn-large">Subscribe to Ground Model</a>
+            <p class="subscribe-note">Daily, Mon-Fri. Free.</p>
+        </section>
+
+        {% if editions and editions|length > 0 %}
+        <section class="editions-section">
+            <h2>Recent Editions</h2>
+            <ul class="edition-list">
+                {% for edition in editions %}
+                <li>
+                    <a href="{{ edition.url }}">
+                        <span class="edition-title">{{ edition.title }}</span>
+                        <span class="edition-date">{{ edition.date }}</span>
+                        {% if edition.preview %}
+                        <span class="edition-preview">{{ edition.preview }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% else %}
+        <section class="coming-soon">
+            <p>First edition coming soon.</p>
+        </section>
+        {% endif %}
+    </main>
+    <footer>
+        <p class="copyright">&copy; {{ year }} Ground Model</p>
+    </footer>
+</body>
+</html>

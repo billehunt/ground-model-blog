@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} — Ground Model</title>
+    <meta name="description" content="{{ preview }}">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ preview }}">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">Ground Model</a>
+        <span class="tagline">AI news. No hype. Just signal.</span>
+    </header>
+    <a href="/" class="back-link">&larr; Back to all editions</a>
+    <article>
+        <h1>{{ title }}</h1>
+        <div class="meta">
+            <time datetime="{{ date }}">{{ date }}</time>
+            <span class="reading-time">{{ reading_time }} min read</span>
+        </div>
+        <div class="content">
+            {{ content }}
+        </div>
+    </article>
+    <div class="share-buttons">
+        <span>Share this edition:</span>
+        <a href="https://twitter.com/intent/tweet?text={{ title|urlencode }}&url={{ canonical_url|urlencode }}" target="_blank" rel="noopener" class="share-btn">Twitter/X</a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ canonical_url|urlencode }}" target="_blank" rel="noopener" class="share-btn">LinkedIn</a>
+        <button onclick="navigator.clipboard.writeText(window.location.href).then(function(){this.textContent='Copied!'}.bind(this))" class="share-btn">Copy link</button>
+    </div>
+    <section class="subscribe-inline">
+        <p>Get Ground Model in your inbox every weekday.</p>
+        <a href="https://ground-model.beehiiv.com/subscribe" class="subscribe-btn-large">Subscribe</a>
+    </section>
+    <footer>
+        <p class="copyright">&copy; {{ year }} Ground Model</p>
+    </footer>
+</body>
+</html>
